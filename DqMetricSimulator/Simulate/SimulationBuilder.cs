@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DqMetricSimulator.Core;
+
+namespace DqMetricSimulator.Simulate
+{
+    public static class SimulationBuilder
+    {
+        public static IHistogram<T> GetHistogram<T>(Column<T> column, IHistogram<Int32> baseHistogram)
+        {
+            if (baseHistogram.Count == 0)
+                throw new DivideByZeroException("Base Histogram CANNOT be Empty!");
+            var ratio = (double)column.Data.Count/baseHistogram.Values.Count;
+            var rv = new Histogram<T>();
+            var lastIdx = 0;
+            for(var i = 0; i < baseHistogram.Count; i++)
+            {
+                var newIdx = (int) (i * ratio);
+                for(var j =lastIdx+1; j<newIdx; j++)
+                {
+                    rv.Add(column.Get(j), baseHistogram[i]);
+                    lastIdx = j;
+                }
+            }
+            return rv;
+        }
+
+        /// <summary>
+        /// Creates a dictionary of simulated results for a metric function.
+        /// Returns a dictionary of keys=>result
+        /// </summary>
+        public static IDictionary<string, SimulatedMetricFunctionInfo> CreateSimulatedLoockup<T>(ITable sourceTable, int targetColumn, IHistogram<T> histogram, Func<IRow, TimeSpan> durationFunc)
+        {
+            var sourceCol = sourceTable.Columns[targetColumn];
+
+            return sourceTable.Rows.GroupBy(r => r.Rows[targetColumn])
+                .Where(g => histogram.ContainsKey((T) sourceCol[g.Key]))
+                .SelectMany(g => GetSimulatedMetricFunctionInfo(sourceTable, g.ToList(), histogram[(T) sourceCol[g.Key]], durationFunc))
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+        }
+
+        private static IEnumerable<KeyValuePair<string, SimulatedMetricFunctionInfo>> GetSimulatedMetricFunctionInfo(ITable sourceTable, List<IRow> list, float percentGood, Func<IRow, TimeSpan> durationFunc)
+        {
+            var goodThr = (int) (percentGood*list.Count);
+            return list.Select((r, i) =>
+                        new KeyValuePair<string, SimulatedMetricFunctionInfo>
+                            (
+                            sourceTable.GetKeystring(r),
+                            new SimulatedMetricFunctionInfo {Duration = durationFunc(r), Result = i <= goodThr}
+                            )
+                );
+        }
+    }
+}
