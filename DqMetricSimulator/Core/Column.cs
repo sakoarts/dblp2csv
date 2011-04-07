@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DqMetricSimulator.Core
 {
@@ -19,6 +20,19 @@ namespace DqMetricSimulator.Core
         public IList<T> Data
         {
             get { return _data; }
+        }
+
+        void IColumn.Add(object o)
+        {
+            Data.Add((T)o);
+        }
+
+        public Column()
+        {}
+
+        public Column(IEnumerable<T> data)
+        {
+            _data = data.ToList();
         }
     }
 }
