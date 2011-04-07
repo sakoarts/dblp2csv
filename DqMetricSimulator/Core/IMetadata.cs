@@ -5,6 +5,6 @@ namespace DqMetricSimulator.Core
     public interface IMetadata
     {
         IList<int> KeyCols { get; }
-        IEnumerable<object> GetKeyValuesForRow(IRow row);
+        IEnumerable<object> GetKeyValuesForRow(ITable table, IRow row);
     }
 }
