@@ -12,7 +12,7 @@ namespace DqMetricSimulator.Core
         public static string GetKeystring(this ITable table, IRow row)
         {
             var keystring = "";
-            table.Metadata.GetKeyValuesForRow(row).ToList().ForEach( k => keystring+=String.Format("({0})", k.ToString()));
+            table.Metadata.GetKeyValuesForRow(table, row).ToList().ForEach( k => keystring+=String.Format("({0})", k.ToString()));
             return keystring;
         }
     }
