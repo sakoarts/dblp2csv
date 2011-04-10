@@ -34,5 +34,15 @@ namespace DqMetricSimulator.Core
         {
             _data = data.ToList();
         }
+
+        public int BinarySearch(T o)
+        {
+            return _data.BinarySearch(o);
+        }
+
+        int IColumn.BinarySearch(object o)
+        {
+            return BinarySearch((T) o);
+        }
     }
 }
