@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 
 namespace DblpDqSimulator.Common
@@ -13,6 +14,16 @@ namespace DblpDqSimulator.Common
         public static string FormatWith(this string str, params object[] pars)
         {
             return String.Format(str, pars);
+        }
+
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> data)
+        {
+            var hs = new HashSet<T>();
+            foreach (var dt in data)
+            {
+                hs.Add(dt);
+            }
+            return hs;
         }
     }
 }

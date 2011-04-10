@@ -67,6 +67,7 @@
     <Compile Include="Simulate\IHistogram.cs" />
     <Compile Include="Simulate\SimulatedMetric.cs" />
     <Compile Include="Simulate\SimulationBuilder.cs" />
+    <Compile Include="Statistics\Utils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
