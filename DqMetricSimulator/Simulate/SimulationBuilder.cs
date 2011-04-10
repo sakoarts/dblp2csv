@@ -41,15 +41,19 @@ namespace DqMetricSimulator.Simulate
             return rv;
         }
 
+        public static IDictionary<string, SimulatedMetricFunctionInfo> CreateSimulatedLoockup<T>(ITable sourceTable, int targetColumn, IHistogram<T> histogram, Func<IRow, TimeSpan> durationFunc)
+        {
+            return CreateSimulatedLoockup(sourceTable, sourceTable.Rows, targetColumn, histogram, durationFunc);
+        }
         /// <summary>
         /// Creates a dictionary of simulated results for a metric function.
         /// Returns a dictionary of keys=>result
         /// </summary>
-        public static IDictionary<string, SimulatedMetricFunctionInfo> CreateSimulatedLoockup<T>(ITable sourceTable, int targetColumn, IHistogram<T> histogram, Func<IRow, TimeSpan> durationFunc)
+        public static IDictionary<string, SimulatedMetricFunctionInfo> CreateSimulatedLoockup<T>(ITable sourceTable, IList<IRow> rows, int targetColumn, IHistogram<T> histogram, Func<IRow, TimeSpan> durationFunc)
         {
             var sourceCol = sourceTable.Columns[targetColumn];
 
-            return sourceTable.Rows.GroupBy(r => r.Rows[targetColumn])
+            return rows.GroupBy(r => r.Rows[targetColumn])
                 .Where(g => histogram.ContainsKey((T) sourceCol[g.Key]))
                 .SelectMany(g => GetSimulatedMetricFunctionInfo(sourceTable, g.ToList(), histogram[(T) sourceCol[g.Key]], durationFunc))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);

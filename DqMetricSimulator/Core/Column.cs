@@ -44,5 +44,11 @@ namespace DqMetricSimulator.Core
         {
             return BinarySearch((T) o);
         }
+
+
+        public int Count
+        {
+            get { return _data.Count; }
+        }
     }
 }
