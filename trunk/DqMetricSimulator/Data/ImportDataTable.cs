@@ -20,6 +20,7 @@ namespace DqMetricSimulator.Data
             //1.Create the ITable based on the dataTable schema
             //2.Load each column in an IColumn
             //3.Rebuild the table, lookup every column value
+            
             var table = ExtractSchema(dataTable);
             (from DataRow row in dataTable.Rows select row).Select( r => GetTableRow(table, r) ).ToList()
                 .ForEach(r => table.Rows.Add(r));
@@ -29,7 +30,7 @@ namespace DqMetricSimulator.Data
         private static IRow GetTableRow(ITable table, DataRow r)
         {
             var rv = new Row();
-            r.ItemArray.Select((o, i) => ((List<object>) table.Columns[i]).BinarySearch(o)).ToList()
+            r.ItemArray.Select((o, i) => table.Columns[i].BinarySearch(o)).ToList()
                 .ForEach(idx => rv.Rows.Add(idx));
             return rv;
         }
@@ -55,7 +56,6 @@ namespace DqMetricSimulator.Data
                 .ForEach(c => table.Columns[c.i] = c.col );
             return table;
         }
-
         
     }
 }

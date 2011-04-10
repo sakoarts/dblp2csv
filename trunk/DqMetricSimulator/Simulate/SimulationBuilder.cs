@@ -9,8 +9,8 @@ namespace DqMetricSimulator.Simulate
     {
         public static IHistogram<Int32> GetNormalDistributedBaseHistogram()
         {
-            var dist = new Statistics.NormalDist(50, 30);
-            return GetRandomBaseHistogram(100, i => (float)dist.PDF(i));
+            var dist = new Statistics.NormalDist(0, 1);
+            return GetRandomBaseHistogram(100, i => (float)(1.0 - 2.0 * dist.PDF((i-50.0)/12.5)));
         }
 
         public static IHistogram<Int32> GetRandomBaseHistogram(int size, Func<Int32, float> randomFunction)
@@ -32,10 +32,10 @@ namespace DqMetricSimulator.Simulate
             for(var i = 0; i < baseHistogram.Count; i++)
             { 
                 var newIdx = (int) (i * ratio);
-                for(var j =lastIdx+1; j<newIdx; j++)
+                for(var j =lastIdx; j<=newIdx; j++)
                 {
                     rv.Add(column.Get(j), baseHistogram[i]);
-                    lastIdx = j;
+                    lastIdx = j+1;
                 }
             }
             return rv;
