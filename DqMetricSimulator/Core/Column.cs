@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace DqMetricSimulator.Core
@@ -44,6 +43,8 @@ namespace DqMetricSimulator.Core
         {
             return BinarySearch((T) o);
         }
+
+        public string Name { get; set; }
 
 
         public int Count
