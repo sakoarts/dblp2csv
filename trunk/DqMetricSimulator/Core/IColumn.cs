@@ -9,5 +9,6 @@ namespace DqMetricSimulator.Core
         Int32 Count { get; }
         void Add(object o);
         int BinarySearch(object o);
+        string Name { get; set; }
     }
 }
