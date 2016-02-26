@@ -1,0 +1,1 @@
+A tiny .net solution written in C# to convert DBLP xml dataset to flat csv file which can be directly imported to DBMSs. A back up of the result (on SQL Server 2008 [R2](https://code.google.com/p/dblp2csv/source/detail?r=2)) is also included in the solution for your convenience.
